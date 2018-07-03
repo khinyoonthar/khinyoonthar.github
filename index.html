@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+ <p id="demo"></p>
+ </head>
+<body onload="getData()">
+<table style="background-color:skyBlue;" width=20% cellpadding="8">
+<form name="demo">
+<h2>Currency Converter</h2> 
+<td style="font-size:160%;">Amount: </td>
+<td><input type="number" name="num" placeholder="Enter Amount" style="font-size:120%;"/></td>
+</tr>
+<tr>
+<td style="font-size:120%;">Country: </td>
+<td><select id="currencyType" style="font-size:120%;">
+    <script>
+    var link="http://forex.cbm.gov.mm/api/latest";
+    function getData()
+    {
+        $.ajax
+        ({
+               url         : "http://forex.cbm.gov.mm/api/latest",
+               type        : "POST",
+               contentType : "application/json",
+               dataType    : "json",
+               processData : false,
+               cache       : false,
+               // data         : JSON.stringify(myobj)
+        }).done(function( msg ) 
+            {
+               console.log(msg)
+               var data=msg.rates;
+               $.each(data, function(key, value)
+               {
+                    $('#currencyType')
+                         .append($('<option>', { value : key })
+                         .text(key));
+               });
+               $(document).ready(function()
+               {
+                 //$(".button").on("click", function()
+                 $("#button").click(function()
+                 {
+               
+                    var e = document.getElementById("currencyType");
+                        var cur = e.options[e.selectedIndex].value;
+                        var data = msg.rates;
+                        var todayRate=msg['rates'][cur];
+                        todayRate = parseFloat(todayRate.replace(/,/g, '')); 
+                        var num = parseInt(document.demo.num.value);
+                        console.log('num' +num);
+                        console.log('todayRate' +todayRate);
+                        if (cur === "JPY" || cur === "VND" || cur === "KRW" || cur === "KHR" || cur === "IDR" || cur === "LAK")
+                            {
+                            var todayRate = todayRate / 100;
+                            var result = num*todayRate;
+                            }
+                        else
+                            {
+                                var result = parseInt(num)*parseInt(todayRate);
+                            }
+                        document.demo.mmk.value =result;
+               
+               });
+               });
+            });
+    }              
+               // for (var i = 0; i < arr.length; i++) {
+               //     // document.write("<select name="+arr[i]+">");
+               //     document.write("<option value="+arr[i]+">" + arr[i] + "</option>");
+               //     //console.log(arr[i]);
+               // }
+               
+               
+        
+ </script>
+</select></td></tr>
+<tr>
+<td><input type="button" value="Result" id="button" onclick="" style="font-size:120%;"> </input></td>
+<td><input type="text" name="mmk" style="font-size:120%;" placeholder="Result"></input></td>
+</tr>
+</form>
+</table>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</body>
+</html>
+
